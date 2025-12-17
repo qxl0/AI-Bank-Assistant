@@ -5,6 +5,7 @@ import { ChatMessage } from '@bank-app/shared';
 import { Send, Loader2, History } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import ChatHistory from './ChatHistory';
+import { apiClient } from '@/lib/api-client';
 
 const STORAGE_KEY = 'bank-app-chat-history';
 
@@ -68,23 +69,26 @@ export default function ChatInterface() {
     setInput('');
     setIsLoading(true);
 
-    // TODO: Replace with actual API call
-    // Simulate API delay
-    setTimeout(() => {
-      const assistantMessage: ChatMessage = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant',
-        content: 'This is a placeholder response. Please implement the conversation logic to handle user requests.',
-        timestamp: new Date(),
-        metadata: {
-          intent: 'general_inquiry',
-          entities: {},
-        },
-      };
+    try {
+      const response = await apiClient.sendMessage(input);
       
-      setMessages((prev) => [...prev, assistantMessage]);
+      if (response.success && response.data) {
+        setMessages((prev) => [...prev, response.data!]);
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

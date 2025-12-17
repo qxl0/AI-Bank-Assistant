@@ -1,28 +1,28 @@
 import { Router, Request, Response } from 'express';
+import { authenticateToken } from '../middleware/auth';
+import { accountService } from '../services/account-service';
 
 const router = Router();
 
 /**
  * GET /api/accounts
  * Get all user accounts
- * 
- * TODO: Implement actual account fetching
- * - Connect to database
- * - Add pagination
- * - Add filtering options
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.userId || 'demo-user';
 
-    // TODO: Replace with database query
+    // Get current balances from account service
+    const balances = accountService.getBalances(userId);
+
+    // Mock data - replace with database query
     const accounts = [
       {
         id: 'acc-1',
         userId,
         accountNumber: '****1234',
         accountType: 'checking',
-        balance: 5420.50,
+        balance: balances.checking,
         currency: 'USD',
         status: 'active',
         createdAt: new Date('2024-01-15'),
@@ -32,7 +32,7 @@ router.get('/', async (req: Request, res: Response) => {
         userId,
         accountNumber: '****5678',
         accountType: 'savings',
-        balance: 12750.25,
+        balance: balances.savings,
         currency: 'USD',
         status: 'active',
         createdAt: new Date('2024-01-15'),
@@ -42,7 +42,7 @@ router.get('/', async (req: Request, res: Response) => {
         userId,
         accountNumber: '****9012',
         accountType: 'credit',
-        balance: 8500.00,
+        balance: balances.credit,
         currency: 'USD',
         status: 'active',
         createdAt: new Date('2024-02-01'),
@@ -65,23 +65,43 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/accounts/transfers/history
+ * Get transfer history for the user
+ */
+router.get('/transfers/history', async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.userId || 'demo-user';
+    const transfers = accountService.getTransfers(userId);
+    
+    console.log('📋 Fetching transfers for', userId, '- Found:', transfers.length);
+    
+    res.json({
+      success: true,
+      data: transfers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'FETCH_ERROR',
+        message: 'Failed to fetch transfer history',
+      },
+    });
+  }
+});
+
+/**
  * GET /api/accounts/:id
  * Get specific account details
- * 
- * TODO: Implement account detail fetching
- * - Fetch from database by ID
- * - Add authorization check
- * - Include related data
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user?.userId || 'demo-user';
 
-    // TODO: Replace with database query
+    // Mock data
     const account = {
       id,
-      userId,
+      userId: (req as any).user.userId,
       accountNumber: '****1234',
       accountType: 'checking',
       balance: 5420.50,
