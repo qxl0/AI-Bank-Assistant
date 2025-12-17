@@ -1,5 +1,12 @@
 {
-  "buildCommand": "npm run build --workspace=@bank-app/shared && npm run build --workspace=@bank-app/web",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install"
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ]
 }
