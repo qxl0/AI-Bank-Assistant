@@ -56,6 +56,7 @@ export interface ChatMessage {
     intent?: IntentType;
     entities?: Record<string, any>;
     visualizationData?: VisualizationData;
+    tableData?: TableData;
   };
 }
 
@@ -128,6 +129,11 @@ export interface VisualizationData {
     showLegend?: boolean;
     animate?: boolean;
   };
+}
+
+export interface TableData {
+  columns: string[];
+  rows: string[][];
 }
 
 // Loan & Product Types

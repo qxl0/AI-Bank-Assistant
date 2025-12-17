@@ -1,4 +1,0 @@
-{
-  "buildCommand": "cd ../.. && npm run build --workspace=@bank-app/shared && npm run build --workspace=@bank-app/web",
-  "outputDirectory": ".next"
-}
