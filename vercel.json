@@ -1,12 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "apps/web/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "distDir": ".next"
-      }
-    }
-  ]
+  "buildCommand": "cd apps/web && npm run build",
+  "devCommand": "cd apps/web && npm run dev",
+  "installCommand": "npm install && cd packages/shared && npm run build",
+  "outputDirectory": "apps/web/.next"
 }
