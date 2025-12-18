@@ -1,0 +1,4 @@
+apps/web
+.vercel
+.next
+node_modules
