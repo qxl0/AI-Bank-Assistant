@@ -76,7 +76,6 @@ function mapBackendResponseToChatMessages(response: BackendResponse): ChatMessag
 
     if (component.type === 'table') {
       const tableData: TableData = {
-        title: component.title,
         columns: component.columns,
         rows: component.rows,
       };
